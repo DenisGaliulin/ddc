@@ -2,33 +2,30 @@ version: '3.8'
 
 services:
   postgres:
-    # ПЫТАЕМСЯ использовать конкретную версию 13-alpine
+
     image: postgres:13-alpine
-    # ⚠️ ВАЖНО: Если образ 13-alpine недоступен, замените на:
-    # image: postgres:latest
-    # Или на конкретную стабильную версию:
-    # image: postgres:16-alpine
+
 
     container_name: postgres_db
     restart: unless-stopped
 
     environment:
-      # ⚠️ ВНИМАНИЕ: Эти значения должны совпадать с application.properties
+
       POSTGRES_DB: appdb           # Имя базы данных
       POSTGRES_USER: appuser       # Имя пользователя
       POSTGRES_PASSWORD: secretpass # Пароль
 
     ports:
-      # "ХОСТ:КОНТЕЙНЕР" - пробрасываем порт наружу
+
       - "5432:5432"
 
     volumes:
-      # Сохраняем данные БД между перезапусками
+
       - postgres_data:/var/lib/postgresql/data
 
-    # Дополнительная проверка здоровья контейнера
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      test: [ "CMD-SHELL", "pg_isready -U appuser -d appdb" ]
       interval: 10s
       timeout: 5s
       retries: 5
